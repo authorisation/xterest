@@ -1,0 +1,9 @@
+Package: auth.xterest
+Name: xterest
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Suckless, Pinterest.
+Maintainer: auth
+Author: auth
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
