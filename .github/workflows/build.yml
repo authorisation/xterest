@@ -17,6 +17,7 @@ jobs:
       run: |
         sudo apt install bash curl sudo
         bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+        echo "THEOS=~/theos" >> $GITHUB_ENV
 
     - name: Make package(s)
       run: |
