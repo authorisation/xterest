@@ -1,0 +1,43 @@
+name: Debug CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup libs
+      run: |
+        sudo apt install bash curl sudo
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+
+    - name: Make package(s)
+      run: |
+        chmod +x ./compile_debug.sh
+        chmod +x ./compile_debug_rootless.sh
+        ./compile_debug.sh
+        ./compile_debug_rootless.sh
+        
+    - name: Package names
+      run: |
+        echo "ROOT=$(ls ./packages/ | grep -i 'iphoneos-arm.deb')" >> $GITHUB_ENV
+        echo "ROOTLESS=$(ls ./packages/ | grep -i 'iphoneos-arm64.deb')" >> $GITHUB_ENV
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ROOT }}
+        path: ./packages/${{ env.ROOT }}
+
+    - name: Upload rootless artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ROOTLESS }}
+        path: ./packages/${{ env.ROOTLESS }}
