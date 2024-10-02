@@ -1,23 +1,20 @@
 #import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
 
-@interface PINProfileViewController : UIViewController /* Interfacing, SBHomeScreenViewController
-                                                            inherits from UIViewController */
+@interface PINPinNode : NSObject
+@end
+@interface DisplayAttributes : NSObject
+- (int)pinType;
 @end
 
-%hook PINProfileViewController 
+%hook PINPinNode
 
--(void)viewDidLoad { // overriding method
-    %orig; // original code
-
-	UIView *ourView = [[UIView alloc] init]; // allocating & initializing our view
-    ourView.frame = CGRectMake(
-                                0, // X coordinate
-                                0, // Y coordinate
-                                40, // Width
-                                30); // Height
-    ourView.backgroundColor = [UIColor blueColor]; // setting our background color to blue
-    [self.view addSubview:ourView]; // adding our view as a subview
+//Block sponsored pins
+- (id)initWithPin:(id)pin displayAttributes:(DisplayAttributes *)attributes {
+    if ([attributes pinType] == 2) {
+        return nil;
+    }
+    
+    return %orig(pin, attributes);
 }
 
 %end
